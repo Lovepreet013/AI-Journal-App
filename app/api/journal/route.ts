@@ -1,4 +1,3 @@
-import { analyze } from "@/utils/ai"
 import { getUserByClerkID } from "@/utils/auth"
 import { prisma } from "@/utils/db"
 import { revalidatePath } from "next/cache"

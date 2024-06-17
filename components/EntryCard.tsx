@@ -1,4 +1,3 @@
-import { getUserByClerkID } from "@/utils/auth"
 import { prisma } from "@/utils/db"
 
 const EntryCard = async ({entry}) => {
