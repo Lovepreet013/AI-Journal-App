@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// prisma/schema.prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // uncomment next line if you use Prisma <5.10
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  clerkId  String         @unique
+  email    String         @unique
+  entries  JournalEntry[] //As the user can have many Journal Entries we are passing array of JournalEntry Schema
+  analyses Analysis[]
+}
+
+model JournalEntry {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  userId String //value will be from the id of User Schema
+  user   User   @relation(fields: [userId], references: [id]) //fields :[userId] is taking the reference i.e value from the id from the User Schema
+
+  content String @db.Text
+
+  analysis Analysis? //This is optional as Analysis is in one-on-one relation with JournalEntry and we won't able to create Journal entry without Analysis and vice versa and the analysis can be done later on the Journal Entry
+
+  @@unique([userId, id])
+}
+
+model Analysis {
+  id        String   @id @default(uuid()) //model for the result of Analysis of AI
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  entryId String
+  entry   JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade) //relation created for sentiment analysis
+
+  mood           String
+  summary        String  @db.Text
+  color          String
+  negative       Boolean
+  subject        String
+  sentimentScore Float   @default(0)
+
+  @@unique([entryId])
+  @@index([userId])
+}
