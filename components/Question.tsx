@@ -28,7 +28,7 @@ const Question = () => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <input disabled={loading} className="border border-gray-300 p-2 text-lg " type="text" value={value} onChange={onChange} placeholder="Ask a question" />
+                <input disabled={loading} className="border border-gray-300 p-2 text-lg " type="text" value={value} onChange={onChange} placeholder="Ask about journals" />
                 <button className="bg-blue-400 px-6 py-2.5" type="submit" disabled={loading}>Ask</button>
             </form>
 
